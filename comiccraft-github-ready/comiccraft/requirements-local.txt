@@ -1,0 +1,7 @@
+# Only needed when IMAGE_BACKEND=local (runs Stable Diffusion on your own machine).
+# Install PyTorch first from https://pytorch.org/get-started/locally/ if you want GPU support.
+torch
+diffusers>=0.30
+transformers>=4.40
+accelerate>=0.30
+safetensors

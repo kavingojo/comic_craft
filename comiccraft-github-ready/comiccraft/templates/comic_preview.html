@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Comic Preview - ComicCraft</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="top">
+      <div>
+        <div class="badge">YOUR GENERATED COMIC</div>
+        <h1>&#128214; Your Comic Preview</h1>
+      </div>
+      <a class="button secondary" href="/">Create Another</a>
+    </header>
+
+    {% if warnings %}
+    <div class="warning">
+      <strong>Heads up:</strong>
+      <ul>{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    <section class="comic-grid">
+      {% for panel in layout %}
+      <article class="panel card">
+        <h2>Panel {{ panel.panel_number }}: {{ panel.title }}</h2>
+        <img src="{{ panel.image_src or panel.image_path }}"
+             data-fallback="{{ panel.image_path }}"
+             alt="Panel {{ panel.panel_number }}: {{ panel.title }}"
+             loading="eager"
+             onerror="if(this.dataset.fallback && this.src.indexOf('data:')===0){var f=this.dataset.fallback;this.dataset.fallback='';this.src=f;}else{this.alt='Image could not be loaded';this.classList.add('broken');}">
+        <p class="scene">{{ panel.scene_description }}</p>
+        {% if panel.caption %}<p><strong>Caption:</strong> {{ panel.caption }}</p>{% endif %}
+        {% if panel.narration %}<p><strong>Narration:</strong> {{ panel.narration }}</p>{% endif %}
+        {% if panel.dialogue %}<p class="dialogue"><strong>Dialogue:</strong> {{ panel.dialogue }}</p>{% endif %}
+        <details><summary>Image prompt</summary><p>{{ panel.image_prompt }}</p></details>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section class="export card">
+      <h2>Save your comic</h2>
+      <p>Your complete comic has been compiled into a PDF.</p>
+      <a id="download-btn" class="button" href="/download/{{ pdf_filename }}" download>&#128229; Download Your Comic as PDF</a>
+    </section>
+  </main>
+
+  <script>
+    // After the download starts, show the export-success page (as described in the project scenario).
+    document.getElementById("download-btn").addEventListener("click", function () {
+      setTimeout(function () {
+        window.location.href = "/export-success?filename={{ pdf_filename }}";
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
